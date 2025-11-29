@@ -394,3 +394,173 @@
   </script>
 </body>
 </html>
+<!-- === Supabase CDN === -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js/dist/umd/supabase.min.js"></script>
+
+<script>
+/* ============================
+  CONFIG — pega tus claves aquí
+  ============================ */
+const SUPABASE_URL = "YOUR_SUPABASE_URL";           // ej: https://abcd1234.supabase.co
+const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+
+// inicializa supabase
+const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+/* ============================
+  FUNCIONES: cargar libros y renderizar carrusel
+  ============================ */
+
+async function loadBooksAndRender() {
+  // 1) traer libros de la tabla "books"
+  const { data: books, error } = await supabase
+    .from('books')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Error cargando books:', error);
+    return;
+  }
+
+  // 2) pintar carrusel principal (elemento con id="carousel" en tu HTML)
+  const carousel = document.getElementById('carousel');
+  if (!carousel) return console.warn('No se encontró #carousel en la página.');
+
+  carousel.innerHTML = ''; // limpiar
+
+  books.forEach(book => {
+    const card = document.createElement('div');
+    card.className = 'item-carrusel'; // usa el estilo que tengas
+
+    const imgHtml = book.cover_url
+      ? `<img src="${book.cover_url}" alt="${escapeHtml(book.title||'Portada')}">`
+      : `<div style="height:270px;display:flex;align-items:center;justify-content:center;color:#6c5f5b">Sin portada</div>`;
+
+    card.innerHTML = `
+      ${imgHtml}
+      <div style="margin-top:10px;font-weight:700">${escapeHtml(book.title||'Sin título')}</div>
+      <div style="color:#6c5f5b;font-size:13px;margin:6px 0">${escapeHtml((book.description||'').slice(0,100))}</div>
+      <div style="display:flex;gap:8px">
+        <button class="boton" onclick="openBook('${encodeURIComponent(book.file_url||'')}')">Leer</button>
+        <button class="boton" onclick="openDetails('${book.id}')">Detalles</button>
+      </div>
+    `;
+    carousel.appendChild(card);
+  });
+
+  // iniciar auto-scroll (suave)
+  initAutoScroll(carousel);
+}
+
+/* helpers */
+function escapeHtml(str){ return (str+'').replace(/[&<>"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c])); }
+
+function openBook(fileUrlEncoded){
+  const url = decodeURIComponent(fileUrlEncoded || '');
+  if(!url) return alert('Archivo no disponible');
+  window.open(url, '_blank');
+}
+
+function openDetails(bookId){
+  // aquí puedes redirigir a una página /book.html?id=... o abrir modal
+  alert('Abrir detalles del libro: ' + bookId);
+}
+
+/* auto-scroll para el carrusel */
+let _autoInterval = null;
+function initAutoScroll(container){
+  if(!_autoInterval) {
+    _autoInterval = setInterval(()=> {
+      try{
+        container.scrollBy({ left: 2, behavior: 'smooth' });
+        // si llegó al final, regresar al inicio
+        if(container.scrollLeft + container.clientWidth >= container.scrollWidth - 10){
+          container.scrollTo({ left: 0, behavior: 'smooth' });
+        }
+      }catch(e){ /* ignore */ }
+    }, 40);
+    container.addEventListener('mouseover', ()=> clearInterval(_autoInterval));
+    container.addEventListener('mouseout', ()=> {
+      if(_autoInterval) clearInterval(_autoInterval);
+      _autoInterval = setInterval(()=> {
+        try{ container.scrollBy({ left: 2, behavior: 'smooth' }); }catch(e){}
+      }, 40);
+    });
+  }
+}
+
+/* ============================
+  PANEL: subir portada + archivo desde la página (admin simple)
+  Requiere que en tu HTML haya:
+  - <input type="file" id="admCover">  para portada
+  - <input type="file" id="admFile">   para pdf/mp3
+  - <input id="admTitle">, #admCategory, #admDesc, #admUploadBtn, #admMsg
+  ============================ */
+
+document.addEventListener('click', (e)=>{
+  if(e.target && e.target.id === 'admUploadBtn'){
+    uploadAdminBook();
+  }
+});
+
+async function uploadAdminBook(){
+  const title = (document.getElementById('admTitle')||{value:''}).value.trim();
+  const category = (document.getElementById('admCategory')||{value:'Mis Libros'}).value.trim() || 'Mis Libros';
+  const desc = (document.getElementById('admDesc')||{value:''}).value.trim();
+  const coverInput = document.getElementById('admCover');
+  const fileInput = document.getElementById('admFile');
+  const admMsg = document.getElementById('admMsg');
+
+  if(!title){ if(admMsg) admMsg.innerText = 'Agrega un título'; return; }
+
+  try{
+    let coverUrl = null;
+    let fileUrl = null;
+
+    // subir portada si hay
+    if(coverInput && coverInput.files && coverInput.files[0]){
+      const file = coverInput.files[0];
+      const key = `covers/${Date.now()}_${file.name}`;
+      const { data, error } = await supabase.storage.from('poetia-files').upload(key, file, { upsert: false });
+      if(error) throw error;
+      // URL pública
+      coverUrl = `${SUPABASE_URL.replace(/\/$/,'')}/storage/v1/object/public/poetia-files/${encodeURIComponent(key)}`;
+    }
+
+    // subir archivo (pdf/mp3)
+    if(fileInput && fileInput.files && fileInput.files[0]){
+      const file = fileInput.files[0];
+      const key2 = `files/${Date.now()}_${file.name}`;
+      const { data, error } = await supabase.storage.from('poetia-files').upload(key2, file, { upsert: false });
+      if(error) throw error;
+      fileUrl = `${SUPABASE_URL.replace(/\/$/,'')}/storage/v1/object/public/poetia-files/${encodeURIComponent(key2)}`;
+    }
+
+    // insertar fila en tabla books
+    const slug = title.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9\-]/g,'');
+    const { data: insertData, error: insertError } = await supabase.from('books').insert([{
+      title, slug, description: desc, cover_url: coverUrl, file_url: fileUrl, category
+    }]);
+    if(insertError) throw insertError;
+
+    if(admMsg) admMsg.innerText = 'Libro subido correctamente';
+    // limpiar inputs
+    if(document.getElementById('admTitle')) document.getElementById('admTitle').value = '';
+    if(document.getElementById('admDesc')) document.getElementById('admDesc').value = '';
+    if(coverInput) coverInput.value = '';
+    if(fileInput) fileInput.value = '';
+
+    // recargar libros
+    await loadBooksAndRender();
+  }catch(err){
+    console.error('Error subiendo libro:', err);
+    if(admMsg) admMsg.innerText = 'Error: ' + (err.message||err);
+  }
+}
+
+/* CARGA INICIAL */
+window.addEventListener('load', ()=> {
+  loadBooksAndRender();
+});
+</script>
