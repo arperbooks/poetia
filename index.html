@@ -58,6 +58,7 @@
   const SUPABASE_URL = "TU_SUPABASE_URL";
   const SUPABASE_ANON_KEY = "TU_ANON_KEY";
   const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+<div id="carousel" style="display:flex; gap:16px; overflow-x:auto; padding:20px;"></div>
 
   async function cargarLibros() {
     const { data: books, error } = await supabase.from('books').select('*').order('created_at', { ascending:false });
