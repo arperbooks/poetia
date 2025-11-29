@@ -53,6 +53,28 @@
     @media (max-width:900px){.grid{grid-template-columns:1fr}.hero{flex-direction:column;align-items:flex-start}.cover{height:180px}}
   </style>
 </head>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js/dist/umd/supabase.min.js"></script>
+<script>
+  const SUPABASE_URL = "TU_SUPABASE_URL";
+  const SUPABASE_ANON_KEY = "TU_ANON_KEY";
+  const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  async function cargarLibros() {
+    const { data: books, error } = await supabase.from('books').select('*').order('created_at', { ascending:false });
+    if(error) { console.error(error); return; }
+    const carousel = document.getElementById('carousel');
+    if(!carousel) return;
+    books.forEach(b => {
+      const card = document.createElement('div');
+      card.innerHTML = `
+        <img src="${b.cover_url}" style="width:100%;height:auto" />
+        <h3>${b.title}</h3>
+      `;
+      carousel.appendChild(card);
+    });
+  }
+  window.addEventListener('load', cargarLibros);
+</script>
 <body>
   <div class="wrap">
     <header>
