@@ -1,332 +1,181 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Poetia — Librería cuántica</title>
-  <style>
-    :root{
-      --bg:#0F172A; --card:#0b1220; --accent:#FF6B35; --muted:#94a3b8; --glass:rgba(255,255,255,0.03);
-      --radius:14px; --maxw:1100px;
-      --text:#E6EEF8;
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Poetia — Biblioteca Digital</title>
+
+<!-- Estilos -->
+<style>
+    body {
+        margin: 0;
+        font-family: "Georgia", serif;
+        background: #f5f1e8;
+        color: #3c2f2f;
     }
-    html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue";background:linear-gradient(180deg,#02040a 0%, #071226 100%);color:var(--text);}
-    .wrap{max-width:var(--maxw);margin:30px auto;padding:20px;}
-    header{display:flex;align-items:center;justify-content:space-between;gap:10px}
-    .brand{display:flex;align-items:center;gap:12px}
-    .logo{width:54px;height:54px;border-radius:12px;background:linear-gradient(135deg,#1f2937,#0b1220);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--accent);font-size:22px}
-    nav a{color:var(--muted);text-decoration:none;margin-left:14px}
-    .hero{background:linear-gradient(135deg, rgba(255,107,53,0.06), rgba(16,24,40,0.25));padding:36px;border-radius:18px;margin-top:18px;display:flex;gap:24px;align-items:center}
-    .hero .left{flex:1}
-    .hero h1{margin:0;font-size:36px;letter-spacing:0.5px}
-    .hero p{color:crema(--muted);margin-top:8px}
-    .cta{margin-top:14px;display:flex;gap:10px}
-    .btn{background:var(--accent);color:#fff;padding:12px 16px;border-radius:10px;border:0;cursor:pointer}
-    .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:crema(--text)}
-    /* sections */
-    .grid{display:grid;grid-template-columns:1fr 360px;gap:22px;margin-top:20px}
-    .panel{background:var(--card);padding:18px;border-radius:14px;box-shadow:0 6px 30px rgba(0,0,0,0.6)}
-    .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
-    .book{background:var(--glass);padding:12px;border-radius:12px;overflow:hidden}
-    .cover{height:140px;border-radius:8px;background:#0b1220;display:flex;align-items:center;justify-content:center;color:var(--muted);margin-bottom:8px}
-    .title{font-weight:600}
-    .desc{font-size:13px;color:var(--muted);margin-top:6px;min-height:40px}
-    .row{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
-    .smallbtn{padding:8px 10px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--text);cursor:pointer}
-    /* sidebar */
-    aside .cardmini{padding:14px;margin-bottom:12px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01))}
-    .category-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-    .chip{padding:8px 10px;border-radius:999px;background:rgba(255,255,255,0.02);color:var(--muted);cursor:pointer;font-size:13px}
-    .chip.active{background:var(--accent);color:#fff}
-    /* carousel simple */
-    .carousel{display:flex;gap:12px;overflow:auto;padding-bottom:8px}
-    /* footer */
-    footer{color:var(--muted);text-align:center;margin-top:26px;padding:20px}
-    /* responsive */
-    @media (max-width:900px){.grid{grid-template-columns:1fr}.hero{flex-direction:column;align-items:flex-start}.cover{height:180px}}
-  </style>
+
+    header {
+        padding: 25px;
+        background: #e8dcc4;
+        text-align: center;
+        font-size: 32px;
+        font-weight: bold;
+        border-bottom: 2px solid #d2c4aa;
+    }
+
+    .subtitulo {
+        text-align: center;
+        color: #6c5f5b;
+        margin-top: -10px;
+        margin-bottom: 30px;
+        font-size: 18px;
+    }
+
+    .seccion {
+        width: 100%;
+        padding: 25px;
+        box-sizing: border-box;
+    }
+
+    .titulo-seccion {
+        font-size: 26px;
+        font-weight: bold;
+        margin-bottom: 15px;
+        border-left: 8px solid #c3a98a;
+        padding-left: 10px;
+    }
+
+    /* Carrusel */
+    .carrusel-contenedor {
+        display: flex;
+        overflow-x: auto;
+        scroll-behavior: smooth;
+        gap: 18px;
+        padding-bottom: 10px;
+    }
+
+    .item-carrusel {
+        min-width: 230px;
+        background: #fffdf8;
+        border-radius: 12px;
+        padding: 15px;
+        border: 1px solid #d8cbb8;
+        box-shadow: 0px 1px 4px rgba(0,0,0,0.1);
+        flex-shrink: 0;
+    }
+
+    .item-carrusel img {
+        width: 100%;
+        height: 270px;
+        object-fit: cover;
+        border-radius: 8px;
+    }
+
+    .item-titulo {
+        font-size: 18px;
+        margin-top: 10px;
+        font-weight: bold;
+    }
+
+    .item-desc {
+        font-size: 14px;
+        color: #6c5f5b;
+        margin-bottom: 10px;
+    }
+
+    .boton {
+        display: inline-block;
+        padding: 8px 13px;
+        background: #c3a98a;
+        color: white;
+        border-radius: 8px;
+        text-decoration: none;
+        transition: 0.2s;
+    }
+
+    .boton:hover {
+        background: #b08f71;
+    }
+</style>
+
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <div class="brand">
-        <div class="logo">P</div>
-        <div>
-          <div style="font-weight:700">Poetia</div>
-          <div style="font-size:12px;color:var(--muted)">Poesía cuántica y lecturas sensoriales</div>
-        </div>
-      </div>
 
-      <nav>
-        <a href="#libros">Libros</a>
-        <a href="#poemas">Poemas</a>
-        <a href="#sorteos">Sorteos</a>
-        <a href="#suscribir" class="smallbtn">Suscribirse</a>
-      </nav>
-    </header>
+<header>Poetia</header>
+<p class="subtitulo">Tu biblioteca digital: poemas, libros, audiolibros y más</p>
 
-    <section class="hero panel">
-      <div class="left">
-        <h1>Poetia — Biblioteca cuántica</h1>
-        <p>Accede a libros, audiolibros y poemas seleccionados. Suscríbete para el pack completo y participa en sorteos exclusivos.</p>
-        <div class="cta">
-          <button class="btn" id="btnBuy">Comprar acceso (Pack)</button>
-          <button class="btn ghost" id="btnExplore">Explorar gratis</button>
-        </div>
-      </div>
-      <div class="right" style="width:360px">
-        <div style="background:linear-gradient(135deg,#081223,#051021);padding:16px;border-radius:12px">
-          <div style="font-size:13px;color:var(--muted)">Destacado</div>
-          <div style="font-weight:700;margin-top:8px">Colección: Amaneceres y Selva</div>
-          <div style="margin-top:10px;color:var(--muted);font-size:13px">Poemas inéditos, audiolibros y libros de autor.</div>
-        </div>
-      </div>
-    </section>
+<!-- DESTACADOS -->
+<div class="seccion">
+    <div class="titulo-seccion">Destacados</div>
+    <div class="carrusel-contenedor">
 
-    <div class="grid">
-      <main>
-        <!-- Carrusel de destacados -->
-        <div class="panel">
-          <h3>Destacados</h3>
-          <div id="carousel" class="carousel" aria-hidden="false"></div>
+        <div class="item-carrusel">
+            <img src="https://images.unsplash.com/photo-1524995997946-a1c2e315a42f" alt="">
+            <div class="item-titulo">Amanecer de Rioja</div>
+            <div class="item-desc">Poemas frescos desde la selva.</div>
+            <a class="boton" href="#">Leer</a>
         </div>
 
-        <!-- Secciones por categoría -->
-        <div id="libros" class="panel" style="margin-top:18px">
-          <h3>Libros</h3>
-          <div style="margin-top:8px;display:flex;align-items:center;gap:8px">
-            <div class="category-list" id="categories"></div>
-          </div>
-
-          <div class="cards" id="booksGrid" style="margin-top:14px"></div>
+        <div class="item-carrusel">
+            <img src="https://images.unsplash.com/photo-1495446815901-a7297e633e8d" alt="">
+            <div class="item-titulo">Pies de Lluvia</div>
+            <div class="item-desc">Sensaciones profundas.</div>
+            <a class="boton" href="#">Leer</a>
         </div>
 
-        <div id="poemas" class="panel" style="margin-top:18px">
-          <h3>Poemas recientes</h3>
-          <div id="poems" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:12px"></div>
+        <div class="item-carrusel">
+            <img src="https://images.unsplash.com/photo-1507842217343-583bb7270b66" alt="">
+            <div class="item-titulo">Versos de Selva</div>
+            <div class="item-desc">Naturaleza hecha palabra.</div>
+            <a class="boton" href="#">Leer</a>
         </div>
 
-        <div id="sorteos" class="panel" style="margin-top:18px">
-          <h3>Sorteos</h3>
-          <p style="color:var(--muted)">Suscríbete y automáticamente participas en sorteos mensuales (ej: iPhone). Revisa términos y condiciones en la página de sorteos.</p>
-          <div style="margin-top:12px">
-            <button class="btn" id="btnDraw">Realizar sorteo (admin)</button>
-          </div>
-        </div>
-      </main>
-
-      <aside>
-        <div class="cardmini panel">
-          <h4>Suscríbete</h4>
-          <p style="color:var(--muted);font-size:13px">Recibe poemas exclusivos y participa en sorteos.</p>
-          <div style="margin-top:10px">
-            <input id="subEmail" placeholder="tu@correo.com" style="width:100%;padding:10px;border-radius:8px;border:0;background:rgba(255,255,255,0.03);color:var(--text)">
-            <button class="btn" style="width:100%;margin-top:10px" id="subBtn">Suscribirme</button>
-            <div id="subMsg" style="margin-top:8px;color:var(--muted);font-size:13px"></div>
-          </div>
-        </div>
-
-        <div class="cardmini panel">
-          <h4>Mis libros</h4>
-          <p style="color:var(--muted);font-size:13px;margin-bottom:8px">Admin: <a href="/admin/upload" style="color:var(--accent)">Subir nuevo</a></p>
-          <div id="miniList" style="display:flex;flex-direction:column;gap:8px"></div>
-        </div>
-
-        <div class="cardmini panel">
-          <h4>Estadísticas</h4>
-          <div style="font-size:20px;font-weight:700">Suscriptores: <span id="countSubs">0</span></div>
-          <div style="color:var(--muted);font-size:13px;margin-top:8px">Participantes en sorteo: <span id="countEntries">0</span></div>
-        </div>
-      </aside>
     </div>
+</div>
 
-    <footer>
-      © <span id="year"></span> Poetia — Percy “Perseo” · <span style="color:var(--muted)">Harper Books</span>
-    </footer>
-  </div>
+<!-- LIBROS -->
+<div class="seccion">
+    <div class="titulo-seccion">Libros Disponibles</div>
+    <div class="carrusel-contenedor">
 
-  <!-- Supabase JS (CDN) -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js/dist/umd/supabase.min.js"></script>
-
-  <script>
-  /* ========================
-     REEMPLAZA ESTOS VALORES
-     ======================== */
-  const SUPABASE_URL = "YOUR_SUPABASE_URL";            // ej: https://abcd1234.supabase.co
-  const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";  // tu anon key (pública)
-
-  // Inicializa Supabase (cliente)
-  const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-  // Estado simple
-  const state = { categories: new Set(), books: [], subscribers: 0, entries: 0 };
-
-  document.getElementById('year').innerText = new Date().getFullYear();
-
-  // Cargar libros desde Supabase
-  async function loadBooks(){
-    try {
-      const { data, error } = await supabase.from('books').select('*').order('created_at',{ ascending:false });
-      if(error) { console.error(error); return; }
-      state.books = data || [];
-      renderCategories();
-      renderBooks();
-      renderCarousel();
-      renderMiniList();
-    } catch(e){ console.error(e) }
-  }
-
-  // Render categorías (dinámico)
-  function renderCategories(){
-    const set = new Set(state.books.map(b => b.category || 'General'));
-    const container = document.getElementById('categories');
-    container.innerHTML = '';
-    // botón "todo"
-    const all = document.createElement('div');
-    all.className='chip active'; all.innerText='Todos';
-    all.onclick = ()=>{ document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active')); all.classList.add('active'); renderBooks(); };
-    container.appendChild(all);
-
-    set.forEach(cat => {
-      const d = document.createElement('div');
-      d.className='chip'; d.innerText = cat;
-      d.onclick = ()=> {
-        document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
-        d.classList.add('active');
-        renderBooks(cat);
-      };
-      container.appendChild(d);
-    });
-  }
-
-  // Render grid principal
-  function renderBooks(filter){
-    const grid = document.getElementById('booksGrid');
-    grid.innerHTML = '';
-    const books = state.books.filter(b => !filter || (b.category||'General') === filter);
-    if(books.length===0){ grid.innerHTML = '<div style="color:var(--muted);padding:18px">No hay libros en esta categoría.</div>'; return; }
-    books.forEach(b=>{
-      const el = document.createElement('article'); el.className='book';
-      const cover = document.createElement('div'); cover.className='cover';
-      const img = document.createElement('img');
-      if(b.cover_url){ img.src = b.cover_url; img.style.width='100%'; img.style.height='100%'; img.style.objectFit='cover'; cover.innerHTML=''; cover.appendChild(img); } else cover.innerText='Portada';
-      el.appendChild(cover);
-      const t = document.createElement('div'); t.className='title'; t.innerText = b.title || 'Sin título';
-      el.appendChild(t);
-      const d = document.createElement('div'); d.className='desc'; d.innerText = b.description || '';
-      el.appendChild(d);
-      const row = document.createElement('div'); row.className='row';
-      const btnView = document.createElement('button'); btnView.className='smallbtn'; btnView.innerText='Ver';
-      btnView.onclick = ()=> openBook(b);
-      const btnBuy = document.createElement('button'); btnBuy.className='smallbtn'; btnBuy.innerText = b.price && b.price>0 ? `S/${b.price}` : 'Gratis';
-      btnBuy.onclick = ()=> buyBook(b);
-      row.appendChild(btnView); row.appendChild(btnBuy);
-      el.appendChild(row);
-      grid.appendChild(el);
-    })
-  }
-
-  // Carrusel simple
-  function renderCarousel(){
-    const car = document.getElementById('carousel'); car.innerHTML='';
-    const featured = state.books.filter(b=>b.is_featured).slice(0,8);
-    const items = featured.length ? featured : state.books.slice(0,8);
-    items.forEach(b=>{
-      const c = document.createElement('div'); c.style.minWidth='220px';
-      c.innerHTML = `
-        <div style="background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.04));padding:12px;border-radius:12px;">
-          <div style="height:120px;background:#071226;border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--muted);margin-bottom:8px">
-            ${b.cover_url? `<img src="${b.cover_url}" style="width:100%;height:100%;object-fit:cover;border-radius:6px">` : 'Portada'}
-          </div>
-          <div style="font-weight:700">${b.title||''}</div>
-          <div style="color:var(--muted);font-size:13px">${(b.description||'').slice(0,80)}</div>
+        <div class="item-carrusel">
+            <img src="https://images.unsplash.com/photo-1528207776546-365bb710ee93" alt="">
+            <div class="item-titulo">Crecimiento Personal</div>
+            <div class="item-desc">Construye tu mejor versión.</div>
+            <a class="boton" href="#">Abrir</a>
         </div>
-      `;
-      car.appendChild(c);
-    });
-  }
 
-  // mini lista lateral
-  function renderMiniList(){
-    const mini = document.getElementById('miniList'); mini.innerHTML='';
-    state.books.slice(0,5).forEach(b=>{
-      const d = document.createElement('div'); d.style.display='flex'; d.style.justifyContent='space-between';
-      d.innerHTML = `<div style="font-size:13px">${b.title||'Sin título'}</div><div style="color:var(--muted)">${(b.category||'')}</div>`;
-      mini.appendChild(d);
-    })
-  }
+        <div class="item-carrusel">
+            <img src="https://images.unsplash.com/photo-1526304640581-d334cdbbf45e" alt="">
+            <div class="item-titulo">Finanzas para Jóvenes</div>
+            <div class="item-desc">Aprende dinero sin complicarte.</div>
+            <a class="boton" href="#">Abrir</a>
+        </div>
 
-  // abrir libro -> si file_url existe, abrir. Si está privado, debes implementar endpoint para signed url.
-  function openBook(b){
-    if(!b.file_url){ alert('No hay archivo'); return; }
-    // si es drive direct link o url pública abre en nueva pestaña
-    window.open(b.file_url, '_blank');
-  }
+    </div>
+</div>
 
-  // comprar libro -> por ahora redirige a checkout general (puedes crear endpoint en /api)
-  async function buyBook(b){
-    // si tienes checkout por libro, pasa book id
-    window.location.href = `/api/create-checkout-session?book_id=${encodeURIComponent(b.id)}`;
-  }
+<!-- POEMAS -->
+<div class="seccion">
+    <div class="titulo-seccion">Poemas Recientes</div>
+    <div class="carrusel-contenedor">
 
-  // suscripción
-  document.getElementById('subBtn').onclick = async ()=>{
-    const email = document.getElementById('subEmail').value.trim();
-    const msg = document.getElementById('subMsg');
-    msg.innerText='';
-    if(!email) return msg.innerText='Ingresa un email válido';
-    // guardar en tabla subscribers
-    const { data, error } = await supabase.from('subscribers').upsert({ email }).select();
-    if(error){ msg.innerText='Error, intenta luego'; console.error(error); return; }
-    msg.innerText='Gracias. Revisa tu correo para confirmar.';
-    // si quieres: añadir entrada para sorteo
-    await supabase.from('entries').insert([{ email, source:'subscribe' }]).catch(()=>{});
-    countStats();
-  };
+        <div class="item-carrusel">
+            <img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e" alt="">
+            <div class="item-titulo">Bruma</div>
+            <div class="item-desc">Un toque de silencio suave.</div>
+            <a class="boton" href="#">Leer</a>
+        </div>
 
-  // draw (admin) - simple: llama endpoint /api/draw o genera localmente
-  document.getElementById('btnDraw').onclick = async ()=>{
-    if(!confirm('Sólo admin. ¿Realizar sorteo ahora?')) return;
-    // Llamar a endpoint serverless que elija ganador
-    const res = await fetch('/api/draw', { method:'POST', headers:{ 'x-admin-secret': 'PUT_ADMIN_SECRET_HERE' }});
-    if(!res.ok){ alert('Error al sortear'); return; }
-    const json = await res.json();
-    alert('Ganador: ' + (json.winner?.email||json.winner?.ticket_number||JSON.stringify(json.winner)));
-  };
+        <div class="item-carrusel">
+            <img src="https://images.unsplash.com/photo-1462206092226-f46025ffe607" alt="">
+            <div class="item-titulo">Savia</div>
+            <div class="item-desc">Piel de naturaleza viva.</div>
+            <a class="boton" href="#">Leer</a>
+        </div>
 
-  // comprar pack general
-  document.getElementById('btnBuy').onclick = ()=> window.location.href = '/api/create-checkout-session';
+    </div>
+</div>
 
-  // cargar poemas de ejemplo (puedes crear tabla poems si quieres)
-  async function loadPoems(){
-    // si no tienes tabla, mostramos ejemplo local
-    const container = document.getElementById('poems');
-    const example = [
-      { title:'Amanecer en Rioja', text:'Despierto y el cielo me mira, como si guardara tu nombre...' },
-      { title:'Piel de lluvia', text:'Tu voz cae suave, como la tarde cuando termina...' },
-      { title:'Río y Verso', text:'La selva respira viejas canciones en mi piel...' }
-    ];
-    example.forEach(p=>{
-      const d = document.createElement('div'); d.className='book'; d.style.background='linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01))';
-      d.innerHTML = `<div style="font-weight:700">${p.title}</div><div style="color:var(--muted);margin-top:6px">${p.text}</div>`;
-      container.appendChild(d);
-    })
-  }
-
-  // contadores
-  async function countStats(){
-    const { count: subs } = await supabase.from('subscribers').select('*', { count:'exact' });
-    const { count: entries } = await supabase.from('entries').select('*', { count:'exact' });
-    document.getElementById('countSubs').innerText = subs || 0;
-    document.getElementById('countEntries').innerText = entries || 0;
-  }
-
-  // cargar todo al inicio
-  (async function init(){
-    await loadBooks();
-    await loadPoems();
-    await countStats();
-  })();
-  </script>
 </body>
 </html>
