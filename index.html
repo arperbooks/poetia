@@ -60,6 +60,10 @@
   const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 <div id="carousel" style="display:flex; gap:16px; overflow-x:auto; padding:20px;"></div>
 
+  
+NEXT_PUBLIC_SUPABASE_URL=https://cxtafkdtibzbkqeuvzoq.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN4dGFma2R0aWJ6YmtxZXV2em9xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ0MjQ5MDMsImV4cCI6MjA4MDAwMDkwM30.wr1yJtDT0pfAWwyDlgxHqBeDuEXIXCvvB3J90PfpU3M
+
   async function cargarLibros() {
     const { data: books, error } = await supabase.from('books').select('*').order('created_at', { ascending:false });
     if(error) { console.error(error); return; }
@@ -202,7 +206,7 @@
     </div>
 
     <footer>
-      © <span id="year"></span> Poetia — Percy “Perseo” · Harper Books
+      © <span id="year"></span> Poetia — Percy “Perseo” · Arper-Books
     </footer>
   </div>
 
